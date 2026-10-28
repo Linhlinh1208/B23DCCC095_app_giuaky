@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { RouteProp, NavigationProp, useFocusEffect } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZES } from '../commons/theme';
 import { Task, RootStackParamList } from '../commons/types';
 import { isTaskOverdue, getDueDateStatusText } from '../utils/dateHelper';
@@ -118,6 +119,12 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({ route, navigation }
           ]}
           onPress={toggleDoneStatus}
         >
+          <Ionicons
+            name={task.done ? 'close-circle-outline' : 'checkmark-circle-outline'}
+            size={20}
+            color="#FFFFFF"
+            style={styles.btnIcon}
+          />
           <Text style={styles.btnText}>
             {task.done ? 'Đánh dấu chưa hoàn thành' : 'Đánh dấu hoàn thành'}
           </Text>
@@ -131,6 +138,7 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({ route, navigation }
           ]}
           onPress={() => navigation.navigate('TaskForm', { taskId: task.id })}
         >
+          <Ionicons name="create-outline" size={20} color={COLORS.primary} style={styles.btnIcon} />
           <Text style={styles.btnEditText}>Sửa công việc</Text>
         </Pressable>
       </View>
@@ -220,8 +228,12 @@ const styles = StyleSheet.create({
   actionButton: {
     height: 48,
     borderRadius: 8,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  btnIcon: {
+    marginRight: 6,
   },
   pressed: {
     opacity: 0.8,

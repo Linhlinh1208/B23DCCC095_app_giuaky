@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZES } from '../commons/theme';
 import { Task, Priority } from '../commons/types';
 import { isTaskOverdue } from '../utils/dateHelper';
@@ -36,13 +37,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleDone, onPress, onLong
         pressed && styles.cardPressed,
       ]}
     >
-      {/* Checkbox tự làm bằng Pressable */}
+      {/* Checkbox tự vẽ bằng Pressable, dùng icon check */}
       <Pressable
         onPress={onToggleDone}
         hitSlop={10}
         style={[styles.checkbox, task.done && styles.checkboxDone]}
       >
-        {task.done && <Text style={styles.checkmark}>✓</Text>}
+        {task.done && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
       </Pressable>
 
       <View style={styles.content}>
@@ -58,7 +59,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleDone, onPress, onLong
             <Text style={styles.categoryText}>{task.category}</Text>
           </View>
 
-          <Text style={styles.dueDateText}>📅 {task.dueDate}</Text>
+          <View style={styles.dateContainer}>
+            <Ionicons name="calendar-outline" size={13} color={COLORS.textSecondary} />
+            <Text style={styles.dueDateText}>{task.dueDate}</Text>
+          </View>
 
           <View
             style={[
@@ -119,11 +123,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.success,
     borderColor: COLORS.success,
   },
-  checkmark: {
-    color: '#FFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
   content: {
     flex: 1,
   },
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 8,
   },
   categoryBadge: {
     backgroundColor: COLORS.categoryTag,
@@ -153,6 +152,11 @@ const styles = StyleSheet.create({
     fontSize: SIZES.xs,
     color: COLORS.categoryText,
     fontWeight: '500',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   dueDateText: {
     fontSize: SIZES.xs,

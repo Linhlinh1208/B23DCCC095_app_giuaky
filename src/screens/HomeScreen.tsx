@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useFocusEffect, NavigationProp } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import SafeScreenLayout from '../layouts/SafeScreenLayout';
 import ProgressBar from '../components/ProgressBar';
 import TaskCard from '../components/TaskCard';
@@ -127,14 +128,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <SafeScreenLayout>
       <ProgressBar total={tasks.length} completed={completedCount} />
 
+      {/* Tìm kiếm & Nút thêm */}
       <View style={styles.topControlRow}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="🔍 Tìm theo tên công việc..."
-          placeholderTextColor={COLORS.textSecondary}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
+        <View style={styles.searchBox}>
+          <Ionicons name="search-outline" size={18} color={COLORS.textSecondary} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Tìm theo tên công việc..."
+            placeholderTextColor={COLORS.textSecondary}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
         <Pressable
           style={({ pressed }) => [
             styles.addButton,
@@ -142,10 +148,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           ]}
           onPress={() => navigation.navigate('TaskForm')}
         >
-          <Text style={styles.addButtonText}>+ Thêm việc</Text>
+          <Ionicons name="add" size={18} color="#FFFFFF" />
+          <Text style={styles.addButtonText}>Thêm việc</Text>
         </Pressable>
       </View>
 
+      {/* Nút bộ lọc */}
       <View style={styles.filterRow}>
         {(
           [
@@ -175,6 +183,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         })}
       </View>
 
+      {/* Sắp xếp và Xoá đã xong */}
       <View style={styles.actionRow}>
         <Pressable
           style={styles.sortButton}
@@ -184,8 +193,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             )
           }
         >
+          <Ionicons name="swap-vertical" size={15} color={COLORS.primary} />
           <Text style={styles.sortButtonText}>
-            ⇅ Sắp xếp: {sortBy === 'DUE_DATE' ? 'Hạn gần nhất' : 'Ưu tiên Cao → Thấp'}
+            {sortBy === 'DUE_DATE' ? 'Hạn gần nhất' : 'Ưu tiên Cao → Thấp'}
           </Text>
         </Pressable>
 
@@ -197,17 +207,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             completedCount === 0 && styles.deleteCompletedDisabled,
           ]}
         >
+          <Ionicons
+            name="trash-outline"
+            size={14}
+            color={completedCount === 0 ? COLORS.disabledText : COLORS.error}
+          />
           <Text
             style={[
               styles.deleteCompletedText,
               completedCount === 0 && styles.deleteCompletedTextDisabled,
             ]}
           >
-            Xoá việc đã xong ({completedCount})
+            Xoá đã xong ({completedCount})
           </Text>
         </Pressable>
       </View>
 
+      {/* Danh sách */}
       <FlatList
         data={filteredAndSortedTasks}
         keyExtractor={(item) => item.id}
@@ -221,7 +237,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyIcon}>📝</Text>
+            <Ionicons name="clipboard-outline" size={48} color={COLORS.disabledText} />
             <Text style={styles.emptyText}>Không tìm thấy công việc phù hợp</Text>
           </View>
         }
@@ -238,23 +254,34 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  searchInput: {
+  searchBox: {
     flex: 1,
-    height: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: COLORS.card,
     borderRadius: 8,
-    paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: COLORS.border,
+    paddingHorizontal: 10,
+    height: 44,
+  },
+  searchIcon: {
+    marginRight: 6,
+  },
+  searchInput: {
+    flex: 1,
     color: COLORS.text,
     fontSize: SIZES.sm,
+    padding: 0,
   },
   addButton: {
     backgroundColor: COLORS.primary,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    gap: 4,
+    paddingHorizontal: 12,
     borderRadius: 8,
+    height: 44,
   },
   buttonPressed: {
     opacity: 0.8,
@@ -299,6 +326,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     paddingVertical: 4,
   },
   sortButtonText: {
@@ -307,7 +337,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   deleteCompletedButton: {
-    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 5,
     paddingHorizontal: 8,
     borderRadius: 6,
     backgroundColor: '#FEE2E2',
@@ -331,13 +364,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 60,
   },
-  emptyIcon: {
-    fontSize: 40,
-    marginBottom: 10,
-  },
   emptyText: {
     color: COLORS.textSecondary,
     fontSize: SIZES.md,
+    marginTop: 10,
   },
 });
 
